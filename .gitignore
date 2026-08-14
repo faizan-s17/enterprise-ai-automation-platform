@@ -8,3 +8,9 @@ __pycache__/
 uploads/
 .pytest_cache/
 *.log
+
+# React dashboard
+dashboard/node_modules/
+dashboard/dist/
+dashboard/.env.production
+

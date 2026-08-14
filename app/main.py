@@ -18,8 +18,22 @@ logging.basicConfig(
 log = logging.getLogger("platform")
 
 
+DEFAULT_SECRET_KEY = "dev-secret-change-me-in-production"
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    if settings.ENVIRONMENT == "production" and settings.SECRET_KEY == DEFAULT_SECRET_KEY:
+        # The default key is committed in config.py, so a public deployment
+        # running with it would let anyone forge a valid JWT for any user ID,
+        # including an admin. Fail fast rather than come up insecure.
+        raise RuntimeError(
+            "SECRET_KEY is still the development default. Set a real "
+            "SECRET_KEY in the environment before running with "
+            "ENVIRONMENT=production. Generate one with: "
+            "python -c \"import secrets; print(secrets.token_hex(32))\""
+        )
+
     init_db()
     from app.seed import seed_if_empty
 

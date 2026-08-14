@@ -51,16 +51,21 @@ def _openai(prompt: str, system: str, json_mode: bool) -> AIResult:
 
 
 def _gemini(prompt: str, system: str, json_mode: bool) -> AIResult:
-    import google.generativeai as genai
+    # google-generativeai is fully deprecated with no further updates; this
+    # uses its replacement, the unified google-genai SDK.
+    from google import genai
+    from google.genai import types
 
-    genai.configure(api_key=settings.GEMINI_API_KEY)
-    model = genai.GenerativeModel(
-        "gemini-1.5-flash", system_instruction=system
+    model_name = "gemini-2.0-flash"
+    client = genai.Client(api_key=settings.GEMINI_API_KEY)
+    config = types.GenerateContentConfig(
+        system_instruction=system,
+        response_mime_type="application/json" if json_mode else "text/plain",
     )
-    cfg = {"response_mime_type": "application/json"} if json_mode else None
-    resp = model.generate_content(prompt, generation_config=cfg)
-    return AIResult(text=(resp.text or "").strip(), model="gemini-1.5-flash",
-                    provider="gemini")
+    resp = client.models.generate_content(
+        model=model_name, contents=prompt, config=config
+    )
+    return AIResult(text=(resp.text or "").strip(), model=model_name, provider="gemini")
 
 
 def complete(prompt: str, system: str = "You are a helpful business assistant.",
