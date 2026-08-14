@@ -1,0 +1,8 @@
+# Railway's Nixpacks builder uses mise to install the Python version pinned
+# in runtime.txt. mise's GitHub-attestation verification for that build has
+# been failing on Railway's build image ("No GitHub artifact attestations
+# found for python@3.11.9"), which is an infrastructure quirk unrelated to
+# this app. Disabling attestation verification unblocks the build; it does
+# not disable checksum verification, which mise still performs.
+[settings]
+python.github_attestations = false
