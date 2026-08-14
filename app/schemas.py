@@ -50,7 +50,10 @@ class UserUpdate(BaseModel):
 class UserOut(BaseModel):
     model_config = ORM
     id: int
-    email: EmailStr
+    # Plain str, not EmailStr. Input is already validated on the way in, and
+    # re-validating on the way out means one malformed stored row returns 500
+    # for the whole list endpoint instead of just looking odd.
+    email: str
     full_name: str
     department: str
     role: Role

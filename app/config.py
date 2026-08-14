@@ -51,7 +51,7 @@ class Settings:
     UPLOAD_DIR = os.getenv("UPLOAD_DIR", "./uploads")
     MAX_UPLOAD_MB = int(os.getenv("MAX_UPLOAD_MB", "20"))
 
-    SEED_ADMIN_EMAIL = os.getenv("SEED_ADMIN_EMAIL", "admin@nexgen.local")
+    SEED_ADMIN_EMAIL = os.getenv("SEED_ADMIN_EMAIL", "admin@nexgenautomation.com")
     SEED_ADMIN_PASSWORD = os.getenv("SEED_ADMIN_PASSWORD", "Admin@12345")
 
     @property
